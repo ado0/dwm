@@ -8,20 +8,20 @@ static const char font[]            = "Meslo for Powerline:size=9";
 #define NUMCOLORS 14
 static const char colors[NUMCOLORS][ColLast][8] = {
 	// border    foreground background
-	{ "#333333", "#999999", "#000000" }, // normal 
-	{ "#770000", "#FFFFFF", "#000000" }, // selected
+	{ "#333333", "#999999", "#001174" }, // normal 
+	{ "#770000", "#FFFFFF", "#001174" }, // selected
 	{ "#770000", "#FFFFFF", "#666666" }, // urgent
-	{ "#000000", "#999999", "#000000" }, // wireless
-	{ "#000000", "#999999", "#000000" }, // bat
-	{ "#000000", "#999999", "#000000" }, // ram
- 	{ "#000000", "#999999", "#000000" }, // cpu
- 	{ "#000000", "#999999", "#000000" }, // disk 
- 	{ "#000000", "#999999", "#000000" }, // net
- 	{ "#000000", "#999999", "#000000" }, // none
- 	{ "#000000", "#999999", "#000000" }, // time
- 	{ "#000000", "#BB0707", "#000000" }, // none
- 	{ "#000000", "#AA0000", "#000000" }, // none
- 	{ "#000000", "#AA0000", "#000000" }, // none
+	{ "#000000", "#999999", "#001174" }, // wireless
+	{ "#000000", "#999999", "#001174" }, // bat
+	{ "#000000", "#999999", "#001174" }, // ram
+ 	{ "#000000", "#999999", "#001174" }, // cpu
+ 	{ "#000000", "#999999", "#001174" }, // disk 
+ 	{ "#000000", "#999999", "#001174" }, // net
+ 	{ "#000000", "#999999", "#001174" }, // none
+ 	{ "#000000", "#999999", "#001174" }, // time
+ 	{ "#000000", "#BB0707", "#001174" }, // none
+ 	{ "#000000", "#AA0000", "#001174" }, // none
+ 	{ "#000000", "#AA0000", "#001174" }, // none
 	
 };
 
@@ -44,6 +44,7 @@ static const Layout layouts[] = {
 	{ "[M]",    False,  monocle },
 	{ "><>",    False,  NULL },    /* no layout function means floating behavior */
 	{ "[G]",    True,  gaplessgrid}, 
+	{ "|||",    True,   col},
 };
 
 /* tagging */
@@ -51,7 +52,7 @@ static Tag tags[] = {
 	/* name     	layout      mfact   nmaster */
 	{ "www",	&layouts[1], -1,    -1 },
 	{ "tty",   	&layouts[0], -1,    -1 },
-	{ "dev",   	&layouts[0], -1,    -1 },
+	{ "dev",   	&layouts[4], -1,    -1 },
 	{ "doc",    	&layouts[1], -1,    -1 },
 	{ "art",   	&layouts[0], -1,    -1 },
 	{ "im",   	&layouts[0], -1,    -1 },
@@ -82,10 +83,13 @@ static const Rule rules[] = {
 /* commands */
 static const char *dmenu[]	= { "dmenu_run", "-fn", font, "-nb", colors[0][ColBG], 
     "-nf", colors[0][ColFG], "-sb", colors[1][ColBG], "-sf", colors[1][ColFG], NULL };
-static const char *dbright[]	= {"xbacklight", "-dec", "5", NULL};
-static const char *ibright[]	= {"xbacklight", "-inc", "5", NULL};
-static const char *etpad[]   	= {"enable_touchpad", NULL};
-static const char *dtpad[]   	= {"disable_touchpad", NULL};
+static const char *screenshot[]	= { "scrot_screenshot.sh", NULL};
+static const char *stop_video[]	= { "pkill", "ffmpeg", NULL};
+static const char *video[]	= { "video_capture.sh", NULL};
+static const char *dbright[]	= { "xbacklight", "-dec", "5", NULL};
+static const char *ibright[]	= { "xbacklight", "-inc", "5", NULL};
+static const char *etpad[]   	= { "enable_touchpad", NULL};
+static const char *dtpad[]   	= { "disable_touchpad", NULL};
 static const char *play[]	= { "mpc", "toggle", NULL };
 static const char *suspend[]	= { "sudo", "zzz", NULL };
 static const char *term[]	= { "urxvtcd", NULL };
@@ -93,7 +97,7 @@ static const char *voldown[]	= { "amixer", "-q", "set", "Master", "5%-", NULL };
 static const char *volmute[]	= { "amixer", "-q", "set", "Master", "toggle", NULL };
 static const char *volup[]	= { "amixer", "-q", "set", "Master", "5%+", NULL };
 static Key keys[] = {
-	/* modifier                 key     	            function        argument */
+	/* modifier             key     	            function        argument */
 	{ MODKEY,		XK_p,			    spawn,          {.v = dmenu } },
 	{ MODKEY|ShiftMask,	XK_Return,		    spawn,          {.v = term } },
 	{ MODKEY,		XK_b,			    togglebar,      {0} },
@@ -110,6 +114,7 @@ static Key keys[] = {
 	{ MODKEY,		XK_f,			    setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,		XK_m,			    setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,		XK_g,			    setlayout,      {.v = &layouts[3]} },
+	{ MODKEY,		XK_e,			    setlayout,      {.v = &layouts[4]} },
 	{ MODKEY,		XK_space,		    setlayout,      {0} },
 	{ MODKEY|ShiftMask,	XK_space,		    togglefloating, {0} },
 	{ MODKEY,		XK_0,			    view,           {.ui = ~0 } },
@@ -119,6 +124,9 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,	XK_comma,		    tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,	XK_period,		    tagmon,         {.i = +1 } },
 
+	{ WINKEY,		XK_e,			spawn,		{.v = screenshot} },
+	{ WINKEY,		XK_w,			spawn,		{.v = stop_video} },
+	{ WINKEY,		XK_t,			spawn,		{.v = video} },
 	{ WINKEY,		XK_n,			spawn,		{.v = dbright } },
 	{ WINKEY,		XK_m,			spawn,		{.v = ibright } },
 	{ WINKEY,		XK_k, 			spawn,		{.v = etpad } },
